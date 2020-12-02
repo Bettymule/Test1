@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="d43a4f83-b241-4b77-b60e-0f8a8ea87337" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<flow name="studentFlow" doc:id="2d3e28f8-9af5-4650-b293-779d177f22c9" >
+		<http:listener doc:name="Listener" doc:id="5d493347-71fc-42c2-bcf4-d4d632e01f25" config-ref="HTTP_Listener_config" path="/users"/>
+		<ee:transform doc:name="Transform Message" doc:id="5bb9bd44-5e76-4ac1-a219-62df5072429c" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+
+	[{
+        "userid": 900,
+        "email": "abcdkkk@gmail.com",
+        "date_joined": -1573012800000,
+        "modified": 1582747201000,
+        "type": 1,
+        "deleted": false,
+        "username": "Abc"
+    },
+    {
+        "userid": 1000,
+        "email": "Betty@gmail.com",
+        "date_joined": 1589068800000,
+        "modified": 1586044800000,
+        "type": 5,
+        "deleted": false,
+        "username": "Cristina"
+    }]
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="studentFlow1" doc:id="1799480b-cea1-4a87-973f-e6e9f1a565a1" >
+		<http:listener doc:name="Listener" doc:id="62533f26-87ad-4493-8ad6-ab08d28194f7" config-ref="HTTP_Listener_config" path="/user{uid}"/>
+		<ee:transform doc:name="Transform Message" doc:id="be693578-f8bc-4673-938b-3542a05528d1" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+        "userid": 900,
+        "email": "abcdkkk@gmail.com",
+        "date_joined": -1573012800000,
+        "modified": 1582747201000,
+        "type": 1,
+        "deleted": false,
+        "username": "Abc"
+    }
+    ]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="studentFlow2" doc:id="cca100ca-b718-4b51-9268-0cda17e87fd0" >
+		<http:listener doc:name="Listener" doc:id="d5cf30c9-8589-4a41-8f22-e4d48b15daea" config-ref="HTTP_Listener_config" path="/postuser"/>
+		<ee:transform doc:name="Transform Message" doc:id="8f95387f-2e19-45ce-b477-c4f46c45838c" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+ "uid" :1530
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="studentFlow3" doc:id="582840e2-d4f0-42e4-a0de-29f036f9377f" >
+		<http:listener doc:name="Listener" doc:id="f99a28ca-a440-4462-a1a2-894a37f024c3" config-ref="HTTP_Listener_config" path="/test"/>
+		<set-payload value="Test" doc:name="Set Payload" doc:id="27007f69-12f2-436a-9e4b-f4641866443e" />
+		<logger level="INFO" doc:name="Logger" doc:id="0a4f2fe8-6e7e-4d62-9799-48ef594a9b72" message="#[payload]"/>
+		<ee:transform doc:name="Transform Message" doc:id="7372203c-d2ce-4b5b-bfce-acd05773b5da" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"email": "test@example.com"
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>
